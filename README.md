@@ -1,6 +1,5 @@
-# Ecotourism
-General description: Gives most suitable areas to visit in Central america + Mexico based on a filter system filled out by the user.  
-
+# Ecotourism :earth_americas:
+General description: Gives most suitable areas to visit in Central america + Mexico based on a filter system filled out by the user.
 
 *Classes:*
 ## 1. Traveler
