@@ -7,7 +7,7 @@ Input function
                         more fauna
                         more flora
                         climb mountains
-                        eat local
+                        culture
 
 Getter function 
 Setter function: restricts attributes
@@ -21,7 +21,8 @@ interests from a set
                 elif more flora:
                         select(tropical_forest, tropical_savanna, mountainous_forest) 
                 elif climb mountains: 
-                        select(hiking, alpinism, tourism)
+                        select(hiking, alpinism, trekking)
+                elif culture(eat_locals, party, historical_site)
                 
 
         weather_input(select_uninterests)
