@@ -1,1 +1,39 @@
+"""
+Functions 
+Own data sets need no filtering, public ones may need
 
+child class "weather" : 
+    rain_yes(select_countries[])
+    rain_no(select_countries[])
+
+    hot_yes(select_countries[])
+    hot_no(select_countries[])
+
+    humid_yes(select_countries[])
+    humid_no(select_countries[])
+
+fauna()
+  if land:
+        select_country["most land animals"]
+  elif marine:  
+        select_country["most sea animals"]
+  else  :
+        select_country["most birds"]
+
+flora()
+    if tropical_forest:
+        select_country["most tropical forests"]
+  elif tropical_savanna:  
+        select_country["most savanna"]
+  else  :
+        select_country["most mountainous"]
+
+mountains()
+ if hiking:
+        select_country["most hills"]
+  elif alpinism:  
+        select_country["steepest mountains"]
+  else  :
+        select_country["cutlural sites"]
+
+"""
