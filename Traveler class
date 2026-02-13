@@ -2,11 +2,35 @@
 *Functions:* 
 Input function 
         personal_input(age, interest1, interest 2, visit_duration)
-Getter function 
+        print(list_interests)
+                interests: 
+                        more fauna
+                        more flora
+                        climb mountains
+                        eat local
 
+Getter function 
 Setter function: restricts attributes
 age > 18
 interests from a set 
 365 > visit_duration > 0
+
+        interest_input()
+                if more fauna:
+                        select(land, birds, marine)
+                elif more flora:
+                        select(tropical_forest, tropical_savanna, mountainous_forest) 
+                elif climb mountains: 
+                        select(hiking, alpinism, tourism)
+                
+
+        weather_input(select_uninterests)
+        print(list_possible_weathers)
+list_possible_weathers: 
+        hot = yes/no
+        rain = yes/no
+        humidity = yes/no
+        
+
 
 """
