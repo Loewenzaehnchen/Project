@@ -1,1 +1,12 @@
+"""
+*Functions:* 
+Input function 
+        personal_input(age, interest1, interest 2, visit_duration)
+Getter function 
 
+Setter function: restricts attributes
+age > 18
+interests from a set 
+365 > visit_duration > 0
+
+"""
