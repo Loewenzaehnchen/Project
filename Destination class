@@ -1,7 +1,108 @@
-#destination outline:
-Specific places within a country 
+class TravelerInput: 
 
-i.e. 
-Specific mountains in e.g. Nicaragua 
-A speficic valley or crater e.g. Yucatan 
-A river e.g. rio coco
+    Available_Interests = {
+    "more fauna",
+    "more flora",
+    "outdoors",
+    "culture"
+    }
+    Interest_Scores = {
+        "more flora": {
+            "Savannah": 1,
+            "Rainforest": 10
+        },
+        "more fauna": {
+            "Marine Animals": 2,
+            "Land Animals": 7,
+            "Bird Watching": 12
+        },
+        "outdoors": {
+            "Chill & Scenic": 3,
+            "Long, Intense Hike": 16
+        },
+        "culture": {
+            "Eat Local": 5,
+            "Historical Sites": 14
+        }
+    }
+
+    Countries_dictionary = [
+        (0, 5, "Belize"),
+        (6, 10, "El Salvador"),
+        (11, 15, "Honduras"),
+        (16, 20, "Nicaragua"),
+        (21, 25, "Guatemala"),
+        (26, 30, "Costa Rica"),
+        (31, 35, "Panama")
+    ]
+
+    def __init__ (self): 
+        self.age = None
+        self.interests = []
+        self.total_score = 0
+        
+    
+    def collect_user_input(self):
+        print("Available interests:")
+        for interest in self.Available_Interests:
+            print("-", interest)
+        while True:
+            try:
+                age = int(input("Enter your age: "))
+                if age < 18:
+                    print("You too young")
+                    continue
+                self.age = age
+                break
+            except ValueError:
+                print("Please enter a valid number.")
+        while True:
+            interest1 = input("Choose first interest: ")
+            interest2 = input("Choose second interest: ")
+
+            if (interest1 in self.Available_Interests and interest2 in self.Available_Interests):
+                self.interests = [interest1, interest2]
+                break
+            print("Not  one of the options, choose one that actually exists")
+        
+        print("\nTraveler profile created!")
+        print("Age:", self.age)
+        print("Interests:", self.interests)
+    def ask_activity_questions(self):
+        print("\nNow let's get specific...\n")
+        for interest in self.interests:
+            print(f"\nBased on your interest in {interest}:")
+            options = list(self.Interest_Scores[interest].items())
+            for i, (activity, _) in enumerate(options, 1):
+                print(f"{i}. {activity}")
+
+            while True:
+                try:
+                    choice = int(input("Choose one option: "))
+                    if 1 <= choice <= len(options):
+                        selected_activity, score = options[choice - 1]
+                        self.total_score += score
+                        print(f"You chose: {selected_activity} (Score: {score})")
+                        break
+                    else:
+                        print("Invalid number.")
+                except ValueError:
+                    print("Enter a number.")
+
+    def get_country(self):
+        for low, high, country in self.Countries_dictionary:
+            if low <= self.total_score <= high:
+                return country
+
+
+if __name__ == "__main__":
+    traveler = TravelerInput()
+    traveler.collect_user_input()
+    traveler.ask_activity_questions()
+
+    country = traveler.get_country()
+
+    print("\n==============================")
+    print("Total Score:", traveler.total_score)
+    print("You should visit:", country)
+    print("==============================")
