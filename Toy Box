@@ -48,3 +48,6 @@ class TravelerInput:
         else:
             raise ValueError("You must choose from one of the interests mentioned before") #when we print stuff we have to print their available options when this is asked.
 
+
+
+
