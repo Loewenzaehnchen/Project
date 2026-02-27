@@ -1,53 +1,106 @@
-
-#input functions: personal input
-
-Interests = {
+Available_Interests = {
     "more fauna",
     "more flora",
-    "mountains",
+    "outdoors",
     "culture"
-}
+    }
+    Interest_Scores = {
+        "more flora": {
+            "Savannah": 1,
+            "Rainforest": 10
+        },
+        "more fauna": {
+            "Marine Animals": 2,
+            "Land Animals": 7,
+            "Bird Watching": 12
+        },
+        "outdoors": {
+            "Chill & Scenic": 3,
+            "Long, Intense Hike": 16
+        },
+        "culture": {
+            "Eat Local": 5,
+            "Historical Sites": 14
+        }
+    }
 
+    Countries_dictionary = [
+        (0, 5, "Belize"),
+        (6, 10, "El Salvador"),
+        (11, 15, "Honduras"),
+        (16, 20, "Nicaragua"),
+        (21, 25, "Guatemala"),
+        (26, 30, "Costa Rica"),
+        (31, 35, "Panama")
+    ]
 
-class TravelerInput: 
-
-    Interests = {
-    "more fauna",
-    "more flora",
-    "mountains",
-    "culture"
-}
-
-    def __init__ (self, age, interest): 
-        self.age = age
-        self.interest = interest
-    
-    def printing(self):
-        self.age = input("Select an interest")
-        self.interest = input("Select an interest")
-
-    @property
-    def age(self):
-        return self.age
-
-    @age.setter
-    def age(self, value):
-        if value < 18 :
-            raise ValueError("Nuhuh u too young to be doing those things, go with a parent")
-        self._age = value
-    
-    def set_visit_duration(self, days):
-        if 0 < days < 365:
-            self._visit_duration = days
-        else:
-            raise ValueError("Your stay must be from 1-365 days")
+    def __init__ (self): 
+        self.age = None
+        self.interests = []
+        self.total_score = 0
         
-    def set_interests(self, interest1, interest2):
-        if interest1 in self.Interests and interest2 in self.Interests:
-            self.interest = [interest1, interest2]
-        else:
-            raise ValueError("You must choose from one of the interests mentioned before") #when we print stuff we have to print their available options when this is asked.
+    
+    def collect_user_input(self):
+        print("Available interests:")
+        for interest in self.Available_Interests:
+            print("-", interest)
+        while True:
+            try:
+                age = int(input("Enter your age: "))
+                if age < 18:
+                    print("You too young")
+                    continue
+                self.age = age
+                break
+            except ValueError:
+                print("Please enter a valid number.")
+        while True:
+            interest1 = input("Choose first interest: ")
+            interest2 = input("Choose second interest: ")
+
+            if (interest1 in self.Available_Interests and interest2 in self.Available_Interests):
+                self.interests = [interest1, interest2]
+                break
+            print("Not  one of the options, choose one that actually exists")
+        
+        print("\nTraveler profile created!")
+        print("Age:", self.age)
+        print("Interests:", self.interests)
+    def ask_activity_questions(self):
+        print("\nNow let's get specific...\n")
+        for interest in self.interests:
+            print(f"\nBased on your interest in {interest}:")
+            options = list(self.Interest_Scores[interest].items())
+            for i, (activity, _) in enumerate(options, 1):
+                print(f"{i}. {activity}")
+
+            while True:
+                try:
+                    choice = int(input("Choose one option: "))
+                    if 1 <= choice <= len(options):
+                        selected_activity, score = options[choice - 1]
+                        self.total_score += score
+                        print(f"You chose: {selected_activity} (Score: {score})")
+                        break
+                    else:
+                        print("Invalid number.")
+                except ValueError:
+                    print("Enter a number.")
+
+    def get_country(self):
+        for low, high, country in self.Countries_dictionary:
+            if low <= self.total_score <= high:
+                return country
 
 
+if __name__ == "__main__":
+    traveler = TravelerInput()
+    traveler.collect_user_input()
+    traveler.ask_activity_questions()
 
+    country = traveler.get_country()
 
+    print("\n==============================")
+    print("Total Score:", traveler.total_score)
+    print("You should visit:", country)
+    print("==============================")
