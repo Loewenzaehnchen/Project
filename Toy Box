@@ -1,1 +1,50 @@
 
+#input functions: personal input
+
+Interests = {
+    "more fauna",
+    "more flora",
+    "mountains",
+    "culture"
+}
+
+
+class TravelerInput: 
+
+    Interests = {
+    "more fauna",
+    "more flora",
+    "mountains",
+    "culture"
+}
+
+    def __init__ (self, age, interest): 
+        self.age = age
+        self.interest = interest
+    
+    def printing(self):
+        self.age = input("Select an interest")
+        self.interest = input("Select an interest")
+
+    @property
+    def age(self):
+        return self.age
+
+    @age.setter
+    def age(self, value):
+        if value < 18 :
+            raise ValueError("Nuhuh u too young to be doing those things, go with a parent")
+        self._age = value
+    
+    def set_visit_duration(self, days):
+        if 0 < days < 365:
+            self._visit_duration = days
+        else:
+            raise ValueError("Your stay must be from 1-365 days")
+        
+    def set_interests(self, interest1, interest2):
+        if interest1 in self.Interests and interest2 in self.Interests:
+            self.interest = [interest1, interest2]
+        else:
+            raise ValueError("You must choose from one of the interests mentioned before") #when we print stuff we have to print their available options when this is asked.
+
