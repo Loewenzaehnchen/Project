@@ -19,30 +19,17 @@ General description: Gives most suitable areas to visit in Central america + Mex
 - Ecosystem
 ### Main attributes:
 - 
-### Main methods:
+
 - 
 ## 3. Destination
 - Define initial
-### Main attributes:
-- 
-### Main methods:
 - 
 ## 4. Culture
 - Food (Vegetarian)
-- Night & social life
 - Historic Sightseeing
-### Main attributes:
--  
+
 ### Main methods
-- 
-## 5. Tips
-- Vaccines
-- Night life
-- Who to contact
-### Main attributes:
-- 
-### Main methods
-- 
+- create a dictionary specifying a ranking corresponding to specific central american countries
 
 
 # OUTPUT PICTURE HERE
