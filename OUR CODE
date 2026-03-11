@@ -1,3 +1,14 @@
+'''
+Travel Recommendation System
+
+Users input data about them, focusing on their interests 
+selected from a given list. Answers correspond to a score 
+that then corresponds to a Central American country
+
+Tkinter is imported for final GUI
+
+'''
+
 class TravelerInput: 
 
     Available_Interests = {
@@ -126,7 +137,7 @@ class ActivityRecommender:
 
             "Eat Local" : ["Eat some Gallo Pinto"],
             "Historical Sites" : ["Visit the Ruins of Leon Viejo"]
-    }
+    },
 
         'Guatemala' : {
             "Marine Animals" : ["See green sea turtles on the beach"],
@@ -141,7 +152,7 @@ class ActivityRecommender:
 
             "Eat Local" : ["Eat Chuchitos"],
             "Historical Sites" : ["Visit Antigua Guatemala"]
-    } 
+    } ,
 
         'El Salvador' : {
             "Marine Animals" : ["Sail around looking for sperm whales"],
@@ -156,7 +167,7 @@ class ActivityRecommender:
 
             "Eat Local" : ["Savour some local pupusas"],
             "Historical Sites" : ["Know the Mayans by visitng the Joya de Ceren pyramid"]
-    }
+    },
 
         'Honduras' : {
             "Marine Animals" : ["Swim with spotted eagle rays"],
@@ -171,7 +182,7 @@ class ActivityRecommender:
 
             "Eat Local" : ["Try Baleadas"],
             "Historical Sites" : ["Learn about the Fuerte de San Cristobal"],
-    }
+    }, 
 
         'Costa Rica' : {
             "Marine Animals" : ["Look for dolphins among the reefs"],
@@ -186,7 +197,7 @@ class ActivityRecommender:
 
             "Eat Local" : ["Gallo Pinto is delicious, we hear..."],
             "Historical Sites" : ["Learn something about the Orosi Church"]
-    }
+    }, 
 
         'Belize' : {
 
@@ -202,7 +213,7 @@ class ActivityRecommender:
 
             "Eat Local" : ["Just eat Guatemalan food"],
             "Historical Sites" : ["Xunantunich Mayan ruins teach us a lot about the past"]
-    }    
+    }    ,
         "Panama": {
             "Marine Animals": ["Snorkel among tropical fish in the Bocas del Toro archipelago"],
             "Land Animals": ["Spot monkeys and sloths in Soberanía National Park"],
@@ -220,26 +231,28 @@ class ActivityRecommender:
         }
 
     def recommend(self, traveler):
+       
         country = traveler.get_country()
 
         if country is None:
-            print("Could not determine a country from your score.")
+            print("No country found")
             return
 
-        
         print(f"Activity recommendations for {country}:")
 
         country_data = self.activity_database.get(country, {})
 
         if not country_data:
-            print("No recommendations available for this country yet.")
+            print("No recommendations for selected country")
             return
 
         # Filter recommendations based on the traveler's chosen interests
-        for interest in traveler.interests:
-            activities = country_data.get(interest, [])
+        for activity_type in traveler.selected_activities: 
+
+            activities = country_data.get(activity_type, [])
+
             if activities:
-                print(f"\n  [{interest.upper()}]")
+                print(f"\n  [{activity_type.upper()}]")
                 for i, activity in enumerate(activities, 1):
                     print(f"    {i}. {activity}")
 
