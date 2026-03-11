@@ -6,6 +6,7 @@ class TravelerInput:
     "outdoors",
     "culture"
     }
+
     Interest_Scores = {
         "more flora": {
             "Savannah": 1,
@@ -50,7 +51,7 @@ class TravelerInput:
             try:
                 age = int(input("Enter your age: "))
                 if age < 18:
-                    print("You too young")
+                    print("You're too young")
                     continue
                 self.age = age
                 break
@@ -93,16 +94,18 @@ class TravelerInput:
         for low, high, country in self.Countries_dictionary:
             if low <= self.total_score <= high:
                 return country
+            
+    def __repr__(self): 
+        return f"Traveler(age={self.age}, interests ={self.interests})"
 
 
-if __name__ == "__main__":
-    traveler = TravelerInput()
-    traveler.collect_user_input()
-    traveler.ask_activity_questions()
+class TravellerOutput:
 
-    country = traveler.get_country()
+    def display_result(self, traveler): 
 
-    print("\n==============================")
-    print("Total Score:", traveler.total_score)
-    print("You should visit:", country)
-    print("==============================")
+        country = traveler.get_country()
+
+        print("\n" + "=" * 40)
+        print("Your traveler score is:", traveler.total_score)
+        print("You should visit:", (country.upper()))
+        print("=" * 40)
