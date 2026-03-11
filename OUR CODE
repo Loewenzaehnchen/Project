@@ -41,6 +41,7 @@ class TravelerInput:
         self.age = None
         self.interests = []
         self.total_score = 0
+        self.selected_activities = []
         
     
     def collect_user_input(self):
@@ -69,6 +70,7 @@ class TravelerInput:
         print("\nTraveler profile created!")
         print("Age:", self.age)
         print("Interests:", self.interests)
+
     def ask_activity_questions(self):
         print("\nNow let's get specific...\n")
         for interest in self.interests:
@@ -83,12 +85,14 @@ class TravelerInput:
                     if 1 <= choice <= len(options):
                         selected_activity, score = options[choice - 1]
                         self.total_score += score
+                        self.selected_activities.append(selected_activity)
                         print(f"You chose: {selected_activity} (Score: {score})")
                         break
                     else:
                         print("Invalid number.")
                 except ValueError:
                     print("Enter a number.")
+        
 
     def get_country(self):
         for low, high, country in self.Countries_dictionary:
@@ -97,7 +101,6 @@ class TravelerInput:
             
     def __repr__(self): 
         return f"Traveler(age={self.age}, interests ={self.interests})"
-
 
 class TravellerOutput:
 
