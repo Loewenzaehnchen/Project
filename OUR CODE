@@ -109,3 +109,136 @@ class TravellerOutput:
         print("Your traveler score is:", traveler.total_score)
         print("You should visit:", (country.upper()))
         print("=" * 40)
+
+class ActivityRecommender:
+
+    activity_database = {
+        'Nicaragua' : {
+            "Marine Animals" : ["Go snorkelling with manatees"],
+            "Land Animals" : ["Go scouting for jaguars"],
+            "Bird Watching" : ["Go find a guardabarranco"],
+
+            "Savannah" : ["Visit Pinos de la Mosquitia"],
+            "Rainforest" : ["Visit the Bosawas Bioshphere Reserve"],
+
+            "Chill & Scenic"  : ["Stroll around the Volcan Masaya National Park"],
+            "Long, Intense Hike" : ["Climb the Mogoton"],
+
+            "Eat Local" : ["Eat some Gallo Pinto"],
+            "Historical Sites" : ["Visit the Ruins of Leon Viejo"]
+    }
+
+        'Guatemala' : {
+            "Marine Animals" : ["See green sea turtles on the beach"],
+            "Land Animals" : ["Go scouting for puma"],
+            "Bird Watching" : ["Go find a quetzal"],
+
+            "Savannah" : ["Visit Sierra de los Cuchutamanes"],
+            "Rainforest" : ["Look at trees in Peten"],
+
+            "Chill & Scenic"  : ["Stroll around the Volcan Pacaya"],
+            "Long, Intense Hike" : ["Climb the Sierra Madre"],
+
+            "Eat Local" : ["Eat Chuchitos"],
+            "Historical Sites" : ["Visit Antigua Guatemala"]
+    } 
+
+        'El Salvador' : {
+            "Marine Animals" : ["Sail around looking for sperm whales"],
+            "Land Animals" : ["Look for spider monkeys in the trees"],
+            "Bird Watching" : ["Spy around for a turquoise brown motmot"],
+
+            "Savannah" : ["There are no savannahs in El Salvador"],
+            "Rainforest" : ["Stare at the trees in the Montecristo Cloud Forest"],
+
+            "Chill & Scenic"  : ["Climb the quiet Volcan Santa Ana "],
+            "Long, Intense Hike" : ["Delve into the Cerro El Pital"],
+
+            "Eat Local" : ["Savour some local pupusas"],
+            "Historical Sites" : ["Know the Mayans by visitng the Joya de Ceren pyramid"]
+    }
+
+        'Honduras' : {
+            "Marine Animals" : ["Swim with spotted eagle rays"],
+            "Land Animals" : ["Look for the curious tapir"],
+            "Bird Watching" : ["Take the scarlet macaw off your bird afficionado bucket list"],
+
+            "Savannah" : ["Drive around La Mosquitia region"],
+            "Rainforest" : ["Marvel at the biodiversity of the Hondruan Cloud Forests"],
+
+            "Chill & Scenic"  : ["Stroll around the Celaque National Park"],
+            "Long, Intense Hike" : ["Dive into the Cerro Las Minas"],
+
+            "Eat Local" : ["Try Baleadas"],
+            "Historical Sites" : ["Learn about the Fuerte de San Cristobal"],
+    }
+
+        'Costa Rica' : {
+            "Marine Animals" : ["Look for dolphins among the reefs"],
+            "Land Animals" : ["Doze off looking at sloths"],
+            "Bird Watching" : ["Look for a brightly coloured toucan"],
+
+            "Savannah" : ["Stroll around la Savana Metropolitana Park"], 
+            "Rainforest" : ["Discover the Monte Verde CLoud Forest Reserve"],
+
+            "Chill & Scenic"  : ["Walk around the Drake Trail"],
+            "Long, Intense Hike" : ["Trek el Camino de Costa Rica"],
+
+            "Eat Local" : ["Gallo Pinto is delicious, we hear..."],
+            "Historical Sites" : ["Learn something about the Orosi Church"]
+    }
+
+        'Belize' : {
+
+            "Marine Animals" : ["Southern stingrays are beautiful this time of year..."],
+            "Land Animals" : ["Crocodiles might be friendly up close, visit some!"],
+            "Bird Watching" : ["Spy lakesides for some rare jabiru storks"],
+
+            "Savannah" : ["Mountain Pine Ridge should be looking real nice this time of year..."],
+            "Rainforest" : ["Visit the wonderful Cockscomb Basin Wildlife Sanctuary"],
+
+            "Chill & Scenic"  : ["Macewall Forest Garden Medicinal Trail is an interesting hike"],
+            "Long, Intense Hike" : ["Walk up the Victoria Peak Trek"],
+
+            "Eat Local" : ["Just eat Guatemalan food"],
+            "Historical Sites" : ["Xunantunich Mayan ruins teach us a lot about the past"]
+    }    
+        "Panama": {
+            "Marine Animals": ["Snorkel among tropical fish in the Bocas del Toro archipelago"],
+            "Land Animals": ["Spot monkeys and sloths in Soberanía National Park"],
+            "Bird Watching": ["Search for toucans and motmots along Pipeline Road"],
+
+            "Savannah": ["Explore the grasslands and dry forests of Sarigua National Park"],
+            "Rainforest": ["Walk the rainforest canopy trails in Soberanía National Park"],
+
+            "Chill & Scenic": ["Relax on the white sand beaches of the San Blas Islands"],
+            "Long, Intense Hike": ["Climb to the summit of Volcán Barú for views of two oceans"],
+
+            "Eat Local": ["Try fresh ceviche at Panama City's Mercado de Mariscos"],
+            "Historical Sites": ["Walk through the historic streets of Casco Viejo"]
+   }
+        }
+
+    def recommend(self, traveler):
+        country = traveler.get_country()
+
+        if country is None:
+            print("Could not determine a country from your score.")
+            return
+
+        
+        print(f"Activity recommendations for {country}:")
+
+        country_data = self.activity_database.get(country, {})
+
+        if not country_data:
+            print("No recommendations available for this country yet.")
+            return
+
+        # Filter recommendations based on the traveler's chosen interests
+        for interest in traveler.interests:
+            activities = country_data.get(interest, [])
+            if activities:
+                print(f"\n  [{interest.upper()}]")
+                for i, activity in enumerate(activities, 1):
+                    print(f"    {i}. {activity}")
