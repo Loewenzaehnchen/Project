@@ -242,3 +242,14 @@ class ActivityRecommender:
                 print(f"\n  [{interest.upper()}]")
                 for i, activity in enumerate(activities, 1):
                     print(f"    {i}. {activity}")
+
+if __name__ == "__main__":
+    traveler = TravelerInput()
+    traveler.collect_user_input()
+    traveler.ask_activity_questions()
+
+    output = TravellerOutput()         
+    output.display_result(traveler)
+
+    recommender = ActivityRecommender()
+    recommender.recommend(traveler)
