@@ -1,39 +1,159 @@
 
+
 import tkinter as tk
-from tkinter import ttk
 from tkinter import messagebox
 
 root = tk.Tk()
 root.title("Eco")
 root.geometry("900x500")
 root.configure(bg="gray")
-var = tk.BooleanVar()
 
-label = tk.Label(root, text="Hello! Welcome to the Start Screen", font=("Comic Sans", 30), anchor="se", fg="dark green", bg="gray")
+# Age confirmation
+age_var = tk.BooleanVar()
+
+label = tk.Label(root, text="Hello! Welcome to the Start Screen",
+                 font=("Comic Sans", 30), fg="dark green", bg="gray")
 label.pack(expand=True)
 
-checkbox = tk.Checkbutton(root, text="Are you 18 or older?", variable=var, fg="dark green", bg="gray", anchor="center")
-checkbox.deselect()
-checkbox.config(state="normal")
+def toggle_button():
+    button.config(state="normal" if age_var.get() else "disabled")
+
+checkbox = tk.Checkbutton(
+    root,
+    text="Are you 18 or older?",
+    variable=age_var,
+    command=toggle_button,
+    fg="dark green",
+    bg="gray"
+)
 checkbox.pack(padx=5, pady=10)
 
-def on_click():
-    label.config(text="Welcome to Ecotourism!")
-def open_second():
-    root.destroy()
-    second_window()
+
+# ---------- SECOND WINDOW ----------
 def second_window():
     win = tk.Tk()
     win.geometry("900x500")
     win.configure(bg="gray")
-    label = tk.Label(win, text="What are you interested in?", font=("Comic Sans", 30), anchor="se", fg="dark green", bg="gray")
-    label.pack()
 
-button = tk.Button(root, text="Click to Continue", command=open_second, fg="dark green", bg="gray")
+    tk.Label(
+        win,
+        text="Pick exactly two interests",
+        font=("Comic Sans", 30),
+        fg="dark green",
+        bg="gray"
+    ).pack(pady=20)
+
+    vars_list = [tk.BooleanVar() for _ in range(4)]
+    options = ["Hiking", "Wildlife", "Beaches", "Forests"]
+    clicked_order = []
+
+    def limit_selection():
+        nonlocal clicked_order
+        # Track selected boxes
+        clicked_order = [i for i, v in enumerate(vars_list) if v.get()]
+
+        count = len(clicked_order)
+        if count > 2:
+            messagebox.showwarning("Limit reached", "You can only choose two.")
+            last = clicked_order[-1]
+            vars_list[last].set(False)
+            clicked_order = clicked_order[:-1]
+            count -= 1
+
+        continue_button.config(state="normal" if count == 2 else "disabled")
+
+    for i, option in enumerate(options):
+        cb = tk.Checkbutton(
+            win,
+            text=option,
+            variable=vars_list[i],
+            command=limit_selection,
+            fg="dark green",
+            bg="gray"
+        )
+        cb.pack(pady=5)
+
+    def continue_next():
+        first, second = clicked_order
+        win.destroy()
+        open_first_page(first, second)
+
+    continue_button = tk.Button(
+        win,
+        text="Continue",
+        state="disabled",
+        command=continue_next,
+        fg="dark green",
+        bg="gray"
+    )
+    continue_button.pack(pady=20)
+    win.mainloop()
+
+
+# ---------- FIRST PAGE ----------
+def open_first_page(first_index, second_index):
+    win = tk.Tk()
+    win.geometry("900x500")
+    win.configure(bg="gray")
+
+    pages_text = ["Hiking", "Wildlife", "Beaches", "Forests"]
+    tk.Label(win, text=f"First Page: {pages_text[first_index]} selected!",
+             font=("Comic Sans", 30), fg="dark green", bg="gray").pack(pady=50)
+
+    def go_to_second():
+        win.destroy()
+        open_second_page(second_index)
+
+    button = tk.Button(win, text="Go to your second selection", command=go_to_second,
+                       fg="dark green", bg="gray")
+    button.pack(pady=20)
+    win.mainloop()
+
+
+# ---------- SECOND PAGE ----------
+def open_second_page(second_index):
+    win = tk.Tk()
+    win.geometry("900x500")
+    win.configure(bg="gray")
+
+    pages_text = ["Hiking", "Wildlife", "Beaches", "Forests"]
+    tk.Label(win, text=f"Second Page: {pages_text[second_index]} selected!",
+             font=("Comic Sans", 30), fg="dark green", bg="gray").pack(pady=50)
+
+    # Button that sends to final page when clicked
+    def go_to_final():
+        win.destroy()
+        final_page()
+
+    button = tk.Button(win, text="Go to Final Page", command=go_to_final,
+                       fg="dark green", bg="gray")
+    button.pack(pady=20)
+    win.mainloop()
+
+
+# ---------- FINAL PAGE ----------
+def final_page():
+    win = tk.Tk()
+    win.geometry("900x500")
+    win.configure(bg="gray")
+
+    tk.Label(win, text="This is the Final Page! Thank you!",
+             font=("Comic Sans", 30), fg="dark green", bg="gray").pack(pady=50)
+
+    tk.Button(win, text="Exit", command=win.destroy,
+              fg="dark green", bg="gray").pack(pady=20)
+    win.mainloop()
+
+
+# ---------- ROOT BUTTON ----------
+button = tk.Button(
+    root,
+    text="Click to Continue",
+    command=lambda: (root.destroy(), second_window()),
+    fg="dark green",
+    bg="gray",
+    state="disabled"
+)
 button.pack(padx=5, pady=5)
-
-# A helper label to show the result of the click
-label = tk.Label(root, text="Click to Continue", fg="dark green", background="gray")
-label.pack(padx=5, pady=5)
 
 root.mainloop()
