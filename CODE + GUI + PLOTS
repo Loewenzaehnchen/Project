@@ -9,9 +9,12 @@ Plots are embedded inside the Tkinter GUI.
 """
 
 import tkinter as tk
+import os
 from tkinter import messagebox
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+plt.style.use("ggplot")
+from PIL import Image, ImageTk
 
 
 class TravelerInput:
@@ -56,33 +59,52 @@ class TravelerInput:
         self.age = None
         self.interests = []
         self.total_score = 0
-        self.selected_activities = []   # stores tuples: (activity_name, score)
+        self.selected_activities = []   # for tuples: (activity_name, score)
         self.root = None
+        
+    #helper function to call up only one page
+    def set_background(self, root, width, height): 
+        base_dir = os.path.dirname(__file__)
+        image_path = os.path.join(base_dir, "images", "rainforest.jpg")
+        bg_image = Image.open(image_path)
+        bg_image = bg_image.resize((width, height))
+
+        photo = ImageTk.PhotoImage(bg_image)
+
+        bg_label = tk.Label(root, image = photo)
+        bg_label.image = photo
+        bg_label.place(x=0, y=0, relwidth=1, relheight=1)
 
     def collect_age(self):
         self.root = tk.Tk()
-        self.root.title("Travel Recommendation System")
+        self.root.title("Central America Travel Recommendation System")
         self.root.geometry("700x500")
-        self.root.configure(bg="gray")
+        self.set_background(self.root, 700, 500)
+        #self.root.configure(bg="white")
 
         self.age_var = tk.StringVar()
 
         tk.Label(
             self.root,
             text="Enter your age:",
-            font=("Arial", 14),
+            font=("Helvetica", 28, "bold"),
             fg="dark green",
-            bg="gray"
-        ).pack(pady=20)
+            bg="white"
+        ).pack(pady=40)
 
-        tk.Entry(self.root, textvariable=self.age_var, font=("Arial", 12)).pack(pady=10)
+        tk.Entry(self.root, textvariable=self.age_var, font=("Helvetica", 12)).pack(pady=10)
 
         tk.Button(
             self.root,
             text="Continue",
             command=self.collect_interests,
-            fg="dark green",
-            bg="white"
+            font=("Helvetica", 14, "bold"),
+            bg="#2f6f3e",
+            fg="white",
+            activebackground="#3e8f55",
+            padx=20,
+            pady=10,
+            relief="flat"
         ).pack(pady=20)
 
         self.root.mainloop()
@@ -101,14 +123,16 @@ class TravelerInput:
         self.root = tk.Tk()
         self.root.title("Travel Recommendation System")
         self.root.geometry("700x500")
-        self.root.configure(bg="gray")
+        self.root.configure(bg="white")
+
+        self.set_background(self.root, 700, 500) # background image
 
         tk.Label(
             self.root,
             text="Select up to two interests:",
-            font=("Arial", 16),
+            font=("Helvetica", 25),
             fg="dark green",
-            bg="gray"
+            bg="white"
         ).pack(pady=20)
 
         self.interest_vars = {}
@@ -120,17 +144,24 @@ class TravelerInput:
                 text=interest,
                 variable=var,
                 fg="dark green",
-                bg="gray",
-                font=("Arial", 12)
+                bg="white",
+                font=("Helvetica", 12)
             ).pack(pady=5)
 
         tk.Button(
             self.root,
             text="Continue",
-            command=self.collect_activities,
-            fg="dark green",
-            bg="white"
+            command=self.collect_activities, 
+            font=("Helvetica", 14, "bold"),
+            bg="#2f6f3e",
+            fg="white",
+            activebackground="#3e8f55",
+            padx=20,
+            pady=10,
+            relief="flat"
         ).pack(pady=20)
+
+
 
         self.root.mainloop()
 
@@ -150,7 +181,8 @@ class TravelerInput:
         self.root = tk.Tk()
         self.root.title("Travel Recommendation System")
         self.root.geometry("700x650")
-        self.root.configure(bg="gray")
+
+        self.set_background(self.root, 700, 650)
 
         self.activity_vars = {}
 
@@ -158,9 +190,9 @@ class TravelerInput:
             tk.Label(
                 self.root,
                 text=f"Based on your interest in {interest}:",
-                font=("Arial", 14, "bold"),
+                font=("Helvetica", 16, "bold"),
                 fg="dark green",
-                bg="gray"
+                bg="white"
             ).pack(pady=10)
 
             for activity, score in self.Interest_Scores[interest].items():
@@ -169,19 +201,24 @@ class TravelerInput:
 
                 tk.Checkbutton(
                     self.root,
-                    text=f"{activity} (score: {score})",
+                    text=f"{activity} ",
                     variable=var,
                     fg="dark green",
-                    bg="gray",
-                    font=("Arial", 11)
+                    bg="white",
+                    font=("Helvetica", 16)
                 ).pack(anchor="w", padx=40)
 
         tk.Button(
             self.root,
-            text="Submit",
+            text="Sumbit",
+            font=("Helvetica", 14, "bold"),
             command=self.submit_selection,
-            fg="dark green",
-            bg="white"
+            bg="#2f6f3e",
+            fg="white",
+            activebackground="#3e8f55",
+            padx=20,
+            pady=10,
+            relief="flat"
         ).pack(pady=20)
 
         self.root.mainloop()
@@ -251,27 +288,36 @@ class TravellerOutput:
         result_window = tk.Tk()
         result_window.title("Travel Recommendation")
         result_window.geometry("1200x850")
-        result_window.configure(bg="gray")
+
+        base_dir = os.path.dirname(__file__)
+        image_path = os.path.join(base_dir, "images", "rainforest.jpg")
+        bg_image = Image.open(image_path)
+        bg_image = bg_image.resize((1200, 850))
+        photo = ImageTk.PhotoImage(bg_image)
+
+        bg_label = tk.Label(result_window, image = photo) 
+        bg_label.image = photo
+        bg_label.place(x=0, y=0, relwidth=1, relheight=1)
 
         tk.Label(
             result_window,
             text=f"Your travel recommendation is: {country.upper()}",
-            font=("Arial", 20, "bold"),
+            font=("Helvetica", 20, "bold"),
             fg="dark green",
-            bg="gray"
+            bg="white"
         ).pack(pady=20)
 
         tk.Label(
             result_window,
             text=f"Total Score: {traveler.total_score}",
-            font=("Arial", 14),
+            font=("Helvetica", 16),
             fg="dark green",
-            bg="gray"
+            bg="white"
         ).pack(pady=5)
 
         ActivityRecommender().recommend(traveler, result_window)
 
-        plots_frame = tk.Frame(result_window, bg="gray")
+        plots_frame = tk.Frame(result_window, bg="white")
         plots_frame.pack(pady=20, fill="both", expand=True)
 
         fig1 = traveler.create_activity_scores_figure()
@@ -375,15 +421,15 @@ class ActivityRecommender:
         if not country_data:
             return
 
-        recommendation_frame = tk.Frame(result_window, bg="gray")
+        recommendation_frame = tk.Frame(result_window, bg="white")
         recommendation_frame.pack(pady=10)
 
         tk.Label(
             recommendation_frame,
             text="Recommended Activities:",
-            font=("Arial", 16, "bold"),
+            font=("Helvetica", 20, "bold"),
             fg="dark green",
-            bg="gray"
+            bg="white"
         ).pack(pady=10)
 
         for activity_type, score in traveler.selected_activities:
@@ -391,10 +437,10 @@ class ActivityRecommender:
             if activities:
                 tk.Label(
                     recommendation_frame,
-                    text=f"For interest in {activity_type.lower()}:",
-                    font=("Arial", 12, "bold"),
+                    text=f"For interest in {activity_type.lower()} we recommend to:",
+                    font=("Helvetica", 14, "bold"),
                     fg="dark green",
-                    bg="gray"
+                    bg="white"
                 ).pack()
 
                 for activity in activities:
@@ -402,10 +448,9 @@ class ActivityRecommender:
                         recommendation_frame,
                         text=f"• {activity}",
                         fg="dark green",
-                        bg="gray",
-                        font=("Arial", 11)
+                        bg="white",
+                        font=("Helvetica", 12)
                     ).pack()
-
 
 if __name__ == "__main__":
     traveler = TravelerInput()
