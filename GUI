@@ -1,1 +1,307 @@
+'''
+Travel Recommendation System
 
+Users input data about them, focusing on their interests 
+selected from a given list. Answers correspond to a score 
+that then corresponds to a Central American country
+
+Tkinter is imported for final GUI
+
+'''
+
+import tkinter as tk
+from tkinter import ttk, messagebox
+
+
+class TravelerInput: 
+
+    Available_Interests = {
+    "more fauna",
+    "more flora",
+    "outdoors",
+    "culture"
+    }
+
+    Interest_Scores = {
+        "more flora": {
+            "Savannah": 1,
+            "Rainforest": 10
+        },
+        "more fauna": {
+            "Marine Animals": 2,
+            "Land Animals": 7,
+            "Bird Watching": 12
+        },
+        "outdoors": {
+            "Chill & Scenic": 3,
+            "Long, Intense Hike": 16
+        },
+        "culture": {
+            "Eat Local": 5,
+            "Historical Sites": 14
+        }
+    }
+
+    Countries_dictionary = [
+        (0, 5, "Belize"),
+        (6, 10, "El Salvador"),
+        (11, 15, "Honduras"),
+        (16, 20, "Nicaragua"),
+        (21, 25, "Guatemala"),
+        (26, 30, "Costa Rica"),
+        (31, 35, "Panama")
+    ]
+
+    def __init__(self):
+        self.age = None
+        self.interests = []
+        self.total_score = 0
+        self.selected_activities = []
+
+    def collect_age(self):
+        self.root = tk.Tk()
+        self.root.title("Travel Recommendation System")
+        self.root.geometry("600x400")
+        self.root.configure(bg="gray")
+
+        # Age input
+        self.age_var = tk.IntVar()
+        age_label = tk.Label(self.root, text="Enter your age:", fg="dark green", bg="gray")
+        age_entry = tk.Entry(self.root, textvariable=self.age_var)
+        age_label.pack(pady=10)
+        age_entry.pack(pady=10)
+
+        continue_button = tk.Button(self.root, text="Continue", command=self.collect_interests, fg="dark green", bg="gray")
+        continue_button.pack(pady=20)
+
+        self.root.mainloop()
+
+    def collect_interests(self):
+        self.age = self.age_var.get()
+        self.root.destroy()
+
+        self.root = tk.Tk()
+        self.root.title("Travel Recommendation System")
+        self.root.geometry("600x400")
+        self.root.configure(bg="gray")
+
+        tk.Label(self.root, text="Select two interests:", font=("Comic Sans", 16), fg="dark green", bg="gray").pack(pady=20)
+
+        self.interest_vars = [tk.BooleanVar() for _ in self.Available_Interests]
+        for i, interest in enumerate(self.Available_Interests):
+            cb = tk.Checkbutton(self.root, text=interest, variable=self.interest_vars[i], fg="dark green", bg="gray")
+            cb.pack(pady=5)
+
+        continue_button = tk.Button(self.root, text="Continue", command=self.collect_activities, fg="dark green", bg="gray")
+        continue_button.pack(pady=20)
+
+        self.root.mainloop()
+
+    def collect_activities(self):
+        self.interests = [interest for i, interest in enumerate(self.Available_Interests) if self.interest_vars[i].get()]
+        self.root.destroy()
+
+        self.root = tk.Tk()
+        self.root.title("Travel Recommendation System")
+        self.root.geometry("600x600")
+        self.root.configure(bg="gray")
+
+        for interest in self.interests:
+            tk.Label(self.root, text=f"Based on your interest in {interest}:", font=("Comic Sans", 14), fg="dark green", bg="gray").pack(pady=10)
+
+            options = list(self.Interest_Scores[interest].items())
+            for activity, score in options:
+                activity_var = tk.BooleanVar()
+                activity_label = tk.Checkbutton(self.root, text=activity, variable=activity_var, fg="dark green", bg="gray")
+                activity_label.pack(pady=5)
+
+                activity_label.config(command=lambda var=activity_var, activity_name=activity, score=score: self.on_check(var, activity_name, score))
+
+        submit_button = tk.Button(self.root, text="Submit", command=self.submit_selection, fg="dark green", bg="gray")
+        submit_button.pack(pady=20)
+
+        self.root.mainloop()
+
+    def on_check(self, var, activity_name, score):
+        if var.get():
+            self.selected_activities.append(activity_name)
+            self.total_score += score
+
+    def submit_selection(self):
+        TravellerOutput().display_result(self)
+
+    def get_country(self):
+        for lower_bound, upper_bound, country in self.Countries_dictionary:
+            if lower_bound <= self.total_score <= upper_bound:
+                return country
+        return None
+
+def on_check(var, activity_name, score):
+    if var.get():
+        self.selected_activities.append(activity_name)
+        self.total_score += score
+    def get_country(self):
+        for lower_bound, upper_bound, country in self.Countries_dictionary:
+            if lower_bound <= self.total_score <= upper_bound:
+                return country
+        return None
+
+class TravellerOutput:
+    def display_result(self, traveler):
+        country = traveler.get_country()
+
+        if country is None:
+            messagebox.showerror("Error", "No country found based on your preferences.")
+            return
+
+        result_window = tk.Tk()
+        result_window.title("Travel Recommendation")
+        result_window.geometry("600x400")
+        result_window.configure(bg="gray")
+
+        result_label = tk.Label(result_window, text=f"Your travel recommendation is: {country.upper()}", font=("Comic Sans", 20), fg="dark green", bg="gray")
+        result_label.pack(pady=50)
+
+        activity_recommender = ActivityRecommender()
+        activity_recommender.recommend(traveler, result_window)
+
+        result_window.mainloop()
+
+class ActivityRecommender:
+
+    activity_database = {
+        'Nicaragua' : {
+            "Marine Animals" : ["Go snorkelling with manatees"],
+            "Land Animals" : ["Go scouting for jaguars"],
+            "Bird Watching" : ["Go find a guardabarranco"],
+
+            "Savannah" : ["Visit Pinos de la Mosquitia"],
+            "Rainforest" : ["Visit the Bosawas Bioshphere Reserve"],
+
+            "Chill & Scenic"  : ["Stroll around the Volcan Masaya National Park"],
+            "Long, Intense Hike" : ["Climb the Mogoton"],
+
+            "Eat Local" : ["Eat some Gallo Pinto"],
+            "Historical Sites" : ["Visit the Ruins of Leon Viejo"]
+    },
+
+        'Guatemala' : {
+            "Marine Animals" : ["See green sea turtles on the beach"],
+            "Land Animals" : ["Go scouting for puma"],
+            "Bird Watching" : ["Go find a quetzal"],
+
+            "Savannah" : ["Visit Sierra de los Cuchutamanes"],
+            "Rainforest" : ["Look at trees in Peten"],
+
+            "Chill & Scenic"  : ["Stroll around the Volcan Pacaya"],
+            "Long, Intense Hike" : ["Climb the Sierra Madre"],
+
+            "Eat Local" : ["Eat Chuchitos"],
+            "Historical Sites" : ["Visit Antigua Guatemala"]
+    } ,
+
+        'El Salvador' : {
+            "Marine Animals" : ["Sail around looking for sperm whales"],
+            "Land Animals" : ["Look for spider monkeys in the trees"],
+            "Bird Watching" : ["Spy around for a turquoise brown motmot"],
+
+            "Savannah" : ["Visit el Jocotal :)"],
+            "Rainforest" : ["Stare at the trees in the Montecristo Cloud Forest"],
+
+            "Chill & Scenic"  : ["Climb the quiet Volcan Santa Ana "],
+            "Long, Intense Hike" : ["Delve into the Cerro El Pital"],
+
+            "Eat Local" : ["Savour some local pupusas"],
+            "Historical Sites" : ["Know the Mayans by visitng the Joya de Ceren pyramid"]
+    },
+
+        'Honduras' : {
+            "Marine Animals" : ["Swim with spotted eagle rays"],
+            "Land Animals" : ["Look for the curious tapir"],
+            "Bird Watching" : ["Take the scarlet macaw off your bird afficionado bucket list"],
+
+            "Savannah" : ["Drive around La Mosquitia region"],
+            "Rainforest" : ["Marvel at the biodiversity of the Hondruan Cloud Forests"],
+
+            "Chill & Scenic"  : ["Stroll around the Celaque National Park"],
+            "Long, Intense Hike" : ["Dive into the Cerro Las Minas"],
+
+            "Eat Local" : ["Try Baleadas"],
+            "Historical Sites" : ["Learn about the Fuerte de San Cristobal"],
+    }, 
+
+        'Costa Rica' : {
+            "Marine Animals" : ["Look for dolphins among the reefs"],
+            "Land Animals" : ["Doze off looking at sloths"],
+            "Bird Watching" : ["Look for a brightly coloured toucan"],
+
+            "Savannah" : ["Stroll around la Savana Metropolitana Park"], 
+            "Rainforest" : ["Discover the Monte Verde CLoud Forest Reserve"],
+
+            "Chill & Scenic"  : ["Walk around the Drake Trail"],
+            "Long, Intense Hike" : ["Trek el Camino de Costa Rica"],
+
+            "Eat Local" : ["Gallo Pinto is delicious, we hear..."],
+            "Historical Sites" : ["Learn something about the Orosi Church"]
+    }, 
+
+        'Belize' : {
+
+            "Marine Animals" : ["Southern stingrays are beautiful this time of year..."],
+            "Land Animals" : ["Crocodiles might be friendly up close, visit some!"],
+            "Bird Watching" : ["Spy lakesides for some rare jabiru storks"],
+
+            "Savannah" : ["Mountain Pine Ridge should be looking real nice this time of year..."],
+            "Rainforest" : ["Visit the wonderful Cockscomb Basin Wildlife Sanctuary"],
+
+            "Chill & Scenic"  : ["Macewall Forest Garden Medicinal Trail is an interesting hike"],
+            "Long, Intense Hike" : ["Walk up the Victoria Peak Trek"],
+
+            "Eat Local" : ["Just eat Guatemalan food"],
+            "Historical Sites" : ["Xunantunich Mayan ruins teach us a lot about the past"]
+    }    ,
+        "Panama": {
+            "Marine Animals": ["Snorkel among tropical fish in the Bocas del Toro archipelago"],
+            "Land Animals": ["Spot monkeys and sloths in Soberanía National Park"],
+            "Bird Watching": ["Search for toucans and motmots along Pipeline Road"],
+
+            "Savannah": ["Explore the grasslands and dry forests of Sarigua National Park"],
+            "Rainforest": ["Walk the rainforest canopy trails in Soberanía National Park"],
+
+            "Chill & Scenic": ["Relax on the white sand beaches of the San Blas Islands"],
+            "Long, Intense Hike": ["Climb to the summit of Volcán Barú for views of two oceans"],
+
+            "Eat Local": ["Try fresh ceviche at Panama City's Mercado de Mariscos"],
+            "Historical Sites": ["Walk through the historic streets of Casco Viejo"]
+   }
+        }
+
+    def recommend(self, traveler, result_window):
+        country = traveler.get_country()
+
+        if country is None:
+            return
+
+        country_data = self.activity_database.get(country, {})
+
+        if not country_data:
+            return
+
+        for activity_type in traveler.selected_activities:
+            activities = country_data.get(activity_type, [])
+
+            if activities:
+                activity_label = tk.Label(result_window, text=f"For interest in {activity_type.lower()}, we recommend:", font=("Comic Sans", 16), fg="dark green", bg="gray")
+                activity_label.pack(pady=20)
+
+                for i, activity in enumerate(activities, 1):
+                    activity_text = tk.Label(result_window, text=f"{i}. {activity}", fg="dark green", bg="gray")
+                    activity_text.pack(pady=5)
+
+        result_window.mainloop()  # You might want to place this outside the loop
+
+if __name__ == "__main__":
+    traveler = TravelerInput()
+    traveler.collect_age()
+    output = TravellerOutput()
+    output.display_result(traveler)
