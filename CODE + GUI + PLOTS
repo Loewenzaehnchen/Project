@@ -15,6 +15,8 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 plt.style.use("ggplot")
 from PIL import Image, ImageTk
+from urllib.request import urlopen
+import io
 
 
 class TravelerInput:
@@ -64,13 +66,14 @@ class TravelerInput:
         
     #helper function to call up only one page
     def set_background(self, root, width, height): 
-        base_dir = os.path.dirname(__file__)
-        image_path = os.path.join(base_dir, "images", "rainforest.jpg")
-        bg_image = Image.open(image_path)
+        # URL of the image you'd like to use as a background
+        image_url = "https://good-nature-blog-uploads.s3.amazonaws.com/uploads/2023/01/B312767B-00C3-4A3E-A95C-1BA5F2A19292.jpeg"
+    # Open the image from the web
+        with urlopen(image_url) as u:
+            raw_data = u.read()
+        bg_image = Image.open(io.BytesIO(raw_data))
         bg_image = bg_image.resize((width, height))
-
         photo = ImageTk.PhotoImage(bg_image)
-
         bg_label = tk.Label(root, image = photo)
         bg_label.image = photo
         bg_label.place(x=0, y=0, relwidth=1, relheight=1)
@@ -289,9 +292,13 @@ class TravellerOutput:
         result_window.title("Travel Recommendation")
         result_window.geometry("1200x850")
 
-        base_dir = os.path.dirname(__file__)
-        image_path = os.path.join(base_dir, "images", "rainforest.jpg")
-        bg_image = Image.open(image_path)
+        image_url = "https://good-nature-blog-uploads.s3.amazonaws.com/uploads/2023/01/B312767B-00C3-4A3E-A95C-1BA5F2A19292.jpeg"
+        with urlopen(image_url) as u:
+            raw_data = u.read()
+        bg_image = Image.open(io.BytesIO(raw_data))
+        bg_image = bg_image.resize((1200, 850))
+        photo = ImageTk.PhotoImage(bg_image)
+
         bg_image = bg_image.resize((1200, 850))
         photo = ImageTk.PhotoImage(bg_image)
 
