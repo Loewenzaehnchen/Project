@@ -115,10 +115,10 @@ class TravelerInput:
     def collect_interests(self):
         try:
             self.age = int(self.age_var.get())
-            if self.age <= 0:
+            if not 18 < self.age < 80:
                 raise ValueError
         except ValueError:
-            messagebox.showerror("Invalid input", "Please enter a valid age.")
+            messagebox.showerror("Invalid input", "You are not allowed to travel without company.")
             return
 
         self.root.destroy()
@@ -171,13 +171,10 @@ class TravelerInput:
     def collect_activities(self):
         self.interests = [interest for interest, var in self.interest_vars.items() if var.get()]
 
-        if len(self.interests) == 0:
-            messagebox.showerror("No interest selected", "Please select at least one interest.")
+        if not len(self.interests) == 2:
+            messagebox.showerror("Incorrect input", "Please select ONLY TWO interest.")
             return
-
-        if len(self.interests) > 2:
-            messagebox.showerror("Too many interests", "Please select no more than two interests.")
-            return
+        
 
         self.root.destroy()
 
