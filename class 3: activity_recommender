@@ -1,0 +1,118 @@
+class ActivityRecommender:
+    activity_database = {
+        'Nicaragua': {
+            "Marine Animals": ["Go snorkelling with manatees"],
+            "Land Animals": ["Go scouting for jaguars"],
+            "Bird Watching": ["Go find a guardabarranco"],
+            "Savannah": ["Visit Pinos de la Mosquitia"],
+            "Rainforest": ["Visit the Bosawas Biosphere Reserve"],
+            "Chill & Scenic": ["Stroll around Volcán Masaya National Park"],
+            "Long, Intense Hike": ["Climb Mogotón"],
+            "Eat Local": ["Eat some Gallo Pinto"],
+            "Historical Sites": ["Visit the Ruins of León Viejo"]
+        },
+        'Guatemala': {
+            "Marine Animals": ["See green sea turtles on the beach"],
+            "Land Animals": ["Go scouting for puma"],
+            "Bird Watching": ["Go find a quetzal"],
+            "Savannah": ["Visit Sierra de los Cuchumatanes"],
+            "Rainforest": ["Look at trees in Petén"],
+            "Chill & Scenic": ["Stroll around Volcán Pacaya"],
+            "Long, Intense Hike": ["Climb the Sierra Madre"],
+            "Eat Local": ["Eat chuchitos"],
+            "Historical Sites": ["Visit Antigua Guatemala"]
+        },
+        'El Salvador': {
+            "Marine Animals": ["Sail around looking for sperm whales"],
+            "Land Animals": ["Look for spider monkeys in the trees"],
+            "Bird Watching": ["Look for a turquoise-browed motmot"],
+            "Savannah": ["Visit El Jocotal"],
+            "Rainforest": ["Explore the Montecristo Cloud Forest"],
+            "Chill & Scenic": ["Climb the quiet Volcán Santa Ana"],
+            "Long, Intense Hike": ["Delve into Cerro El Pital"],
+            "Eat Local": ["Savour some local pupusas"],
+            "Historical Sites": ["Visit Joya de Cerén"]
+        },
+        'Honduras': {
+            "Marine Animals": ["Swim with spotted eagle rays"],
+            "Land Animals": ["Look for the curious tapir"],
+            "Bird Watching": ["Spot the scarlet macaw"],
+            "Savannah": ["Drive around La Mosquitia region"],
+            "Rainforest": ["Marvel at the Honduran cloud forests"],
+            "Chill & Scenic": ["Stroll around Celaque National Park"],
+            "Long, Intense Hike": ["Hike Cerro Las Minas"],
+            "Eat Local": ["Try baleadas"],
+            "Historical Sites": ["Learn about Fuerte de San Cristóbal"]
+        },
+        'Costa Rica': {
+            "Marine Animals": ["Look for dolphins among the reefs"],
+            "Land Animals": ["Watch sloths in the trees"],
+            "Bird Watching": ["Look for a brightly coloured toucan"],
+            "Savannah": ["Stroll around La Sabana Metropolitana Park"],
+            "Rainforest": ["Discover the Monteverde Cloud Forest Reserve"],
+            "Chill & Scenic": ["Walk around the Drake Trail"],
+            "Long, Intense Hike": ["Trek el Camino de Costa Rica"],
+            "Eat Local": ["Try Gallo Pinto"],
+            "Historical Sites": ["Learn about Orosi Church"]
+        },
+        'Belize': {
+            "Marine Animals": ["See southern stingrays"],
+            "Land Animals": ["Visit crocodile habitats"],
+            "Bird Watching": ["Look for jabiru storks"],
+            "Savannah": ["Explore Mountain Pine Ridge"],
+            "Rainforest": ["Visit Cockscomb Basin Wildlife Sanctuary"],
+            "Chill & Scenic": ["Walk the Macewall Forest Garden trail"],
+            "Long, Intense Hike": ["Walk up the Victoria Peak Trek"],
+            "Eat Local": ["Try local Belizean dishes"],
+            "Historical Sites": ["Visit Xunantunich Mayan ruins"]
+        },
+        "Panama": {
+            "Marine Animals": ["Snorkel in Bocas del Toro"],
+            "Land Animals": ["Spot monkeys and sloths in Soberanía National Park"],
+            "Bird Watching": ["Search for toucans along Pipeline Road"],
+            "Savannah": ["Explore Sarigua National Park"],
+            "Rainforest": ["Walk the canopy trails in Soberanía National Park"],
+            "Chill & Scenic": ["Relax on the San Blas Islands"],
+            "Long, Intense Hike": ["Climb Volcán Barú"],
+            "Eat Local": ["Try ceviche at Mercado de Mariscos"],
+            "Historical Sites": ["Walk through Casco Viejo"]
+        }
+    }
+
+    def recommend(self, traveler, result_window):
+        country = traveler.get_country()
+        country_data = self.activity_database.get(country, {})
+
+        if not country_data:
+            return
+
+        recommendation_frame = tk.Frame(result_window, bg="white")
+        recommendation_frame.pack(pady=10)
+
+        tk.Label(
+            recommendation_frame,
+            text="Recommended Activities:",
+            font=("Helvetica", 20, "bold"),
+            fg="dark green",
+            bg="white"
+        ).pack(pady=10)
+
+        for activity_type, score in traveler.selected_activities:
+            activities = country_data.get(activity_type, [])
+            if activities:
+                tk.Label(
+                    recommendation_frame,
+                    text=f"For interest in {activity_type.lower()} we recommend to:",
+                    font=("Helvetica", 14, "bold"),
+                    fg="dark green",
+                    bg="white"
+                ).pack()
+
+                for activity in activities:
+                    tk.Label(
+                        recommendation_frame,
+                        text=f"• {activity}",
+                        fg="dark green",
+                        bg="white",
+                        font=("Helvetica", 12)
+                    ).pack()
