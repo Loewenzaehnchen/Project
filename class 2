@@ -1,0 +1,59 @@
+class TravellerOutput:
+    def display_result(self, traveler):
+        country = traveler.get_country()
+
+        if country == "No matching country":
+            messagebox.showerror("Error", "No country found based on your preferences.")
+            return
+
+        result_window = tk.Tk()
+        result_window.title("Travel Recommendation")
+        result_window.geometry("1200x850")
+
+        image_url = "https://good-nature-blog-uploads.s3.amazonaws.com/uploads/2023/01/B312767B-00C3-4A3E-A95C-1BA5F2A19292.jpeg"
+        with urlopen(image_url) as u:
+            raw_data = u.read()
+        bg_image = Image.open(io.BytesIO(raw_data))
+        bg_image = bg_image.resize((1200, 850))
+        photo = ImageTk.PhotoImage(bg_image)
+
+        bg_image = bg_image.resize((1200, 850))
+        photo = ImageTk.PhotoImage(bg_image)
+
+        bg_label = tk.Label(result_window, image = photo) 
+        bg_label.image = photo
+        bg_label.place(x=0, y=0, relwidth=1, relheight=1)
+
+        tk.Label(
+            result_window,
+            text=f"Your travel recommendation is: {country.upper()}",
+            font=("Helvetica", 20, "bold"),
+            fg="dark green",
+            bg="white"
+        ).pack(pady=20)
+
+        tk.Label(
+            result_window,
+            text=f"Total Score: {traveler.total_score}",
+            font=("Helvetica", 16),
+            fg="dark green",
+            bg="white"
+        ).pack(pady=5)
+
+        ActivityRecommender().recommend(traveler, result_window)
+
+        plots_frame = tk.Frame(result_window, bg="white")
+        plots_frame.pack(pady=20, fill="both", expand=True)
+
+        fig1 = traveler.create_activity_scores_figure()
+        canvas1 = FigureCanvasTkAgg(fig1, master=plots_frame)
+        canvas1.draw()
+        canvas1.get_tk_widget().pack(side="left", padx=20, pady=10)
+
+        fig2 = traveler.create_country_ranges_figure()
+        canvas2 = FigureCanvasTkAgg(fig2, master=plots_frame)
+        canvas2.draw()
+        canvas2.get_tk_widget().pack(side="right", padx=20, pady=10)
+
+        result_window.mainloop()
+
