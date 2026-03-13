@@ -1,0 +1,260 @@
+class TravelerInput:
+    Available_Interests = [
+        "more fauna",
+        "more flora",
+        "outdoors",
+        "culture"
+    ]
+
+    Interest_Scores = {
+        "more flora": {
+            "Savannah": 1,
+            "Rainforest": 10
+        },
+        "more fauna": {
+            "Marine Animals": 2,
+            "Land Animals": 7,
+            "Bird Watching": 12
+        },
+        "outdoors": {
+            "Chill & Scenic": 3,
+            "Long, Intense Hike": 16
+        },
+        "culture": {
+            "Eat Local": 5,
+            "Historical Sites": 14
+        }
+    }
+
+    Countries_dictionary = [
+        (0, 5, "Belize"),
+        (6, 10, "El Salvador"),
+        (11, 15, "Honduras"),
+        (16, 20, "Nicaragua"),
+        (21, 25, "Guatemala"),
+        (26, 30, "Costa Rica"),
+        (31, 35, "Panama")
+    ]
+
+    def __init__(self):
+        self.age = None
+        self.interests = []
+        self.total_score = 0
+        self.selected_activities = []   # for tuples: (activity_name, score)
+        self.root = None
+        
+    #helper function to call up only one page
+    def set_background(self, root, width, height): 
+        # URL of the image you'd like to use as a background
+        image_url = "https://good-nature-blog-uploads.s3.amazonaws.com/uploads/2023/01/B312767B-00C3-4A3E-A95C-1BA5F2A19292.jpeg"
+    # Open the image from the web
+        with urlopen(image_url) as u:
+            raw_data = u.read()
+        bg_image = Image.open(io.BytesIO(raw_data))
+        bg_image = bg_image.resize((width, height))
+        photo = ImageTk.PhotoImage(bg_image)
+        bg_label = tk.Label(root, image = photo)
+        bg_label.image = photo
+        bg_label.place(x=0, y=0, relwidth=1, relheight=1)
+
+    def collect_age(self):
+        self.root = tk.Tk()
+        self.root.title("Central America Travel Recommendation System")
+        self.root.geometry("700x500")
+        self.set_background(self.root, 700, 500)
+        #self.root.configure(bg="white")
+
+        self.age_var = tk.StringVar()
+
+        tk.Label(
+            self.root,
+            text="Enter your age:",
+            font=("Helvetica", 28, "bold"),
+            fg="dark green",
+            bg="white"
+        ).pack(pady=40)
+
+        tk.Entry(self.root, textvariable=self.age_var, font=("Helvetica", 12)).pack(pady=10)
+
+        tk.Button(
+            self.root,
+            text="Continue",
+            command=self.collect_interests,
+            font=("Helvetica", 14, "bold"),
+            bg="#2f6f3e",
+            fg="white",
+            activebackground="#3e8f55",
+            padx=20,
+            pady=10,
+            relief="flat"
+        ).pack(pady=20)
+
+        self.root.mainloop()
+
+    def collect_interests(self):
+        try:
+            self.age = int(self.age_var.get())
+            if self.age <= 0:
+                raise ValueError
+        except ValueError:
+            messagebox.showerror("Invalid input", "Please enter a valid age.")
+            return
+
+        self.root.destroy()
+
+        self.root = tk.Tk()
+        self.root.title("Travel Recommendation System")
+        self.root.geometry("700x500")
+        self.root.configure(bg="white")
+
+        self.set_background(self.root, 700, 500) # background image
+
+        tk.Label(
+            self.root,
+            text="Select up to two interests:",
+            font=("Helvetica", 25),
+            fg="dark green",
+            bg="white"
+        ).pack(pady=20)
+
+        self.interest_vars = {}
+        for interest in self.Available_Interests:
+            var = tk.BooleanVar()
+            self.interest_vars[interest] = var
+            tk.Checkbutton(
+                self.root,
+                text=interest,
+                variable=var,
+                fg="dark green",
+                bg="white",
+                font=("Helvetica", 12)
+            ).pack(pady=5)
+
+        tk.Button(
+            self.root,
+            text="Continue",
+            command=self.collect_activities, 
+            font=("Helvetica", 14, "bold"),
+            bg="#2f6f3e",
+            fg="white",
+            activebackground="#3e8f55",
+            padx=20,
+            pady=10,
+            relief="flat"
+        ).pack(pady=20)
+
+
+
+        self.root.mainloop()
+
+    def collect_activities(self):
+        self.interests = [interest for interest, var in self.interest_vars.items() if var.get()]
+
+        if len(self.interests) == 0:
+            messagebox.showerror("No interest selected", "Please select at least one interest.")
+            return
+
+        if len(self.interests) > 2:
+            messagebox.showerror("Too many interests", "Please select no more than two interests.")
+            return
+
+        self.root.destroy()
+
+        self.root = tk.Tk()
+        self.root.title("Travel Recommendation System")
+        self.root.geometry("700x650")
+
+        self.set_background(self.root, 700, 650)
+
+        self.activity_vars = {}
+
+        for interest in self.interests:
+            tk.Label(
+                self.root,
+                text=f"Based on your interest in {interest}:",
+                font=("Helvetica", 16, "bold"),
+                fg="dark green",
+                bg="white"
+            ).pack(pady=10)
+
+            for activity, score in self.Interest_Scores[interest].items():
+                var = tk.BooleanVar()
+                self.activity_vars[activity] = (var, score)
+
+                tk.Checkbutton(
+                    self.root,
+                    text=f"{activity} ",
+                    variable=var,
+                    fg="dark green",
+                    bg="white",
+                    font=("Helvetica", 16)
+                ).pack(anchor="w", padx=40)
+
+        tk.Button(
+            self.root,
+            text="Sumbit",
+            font=("Helvetica", 14, "bold"),
+            command=self.submit_selection,
+            bg="#2f6f3e",
+            fg="white",
+            activebackground="#3e8f55",
+            padx=20,
+            pady=10,
+            relief="flat"
+        ).pack(pady=20)
+
+        self.root.mainloop()
+
+    def submit_selection(self):
+        self.selected_activities = []
+        self.total_score = 0
+
+        for activity, (var, score) in self.activity_vars.items():
+            if var.get():
+                self.selected_activities.append((activity, score))
+                self.total_score += score
+
+        if not self.selected_activities:
+            messagebox.showerror("No activity selected", "Please select at least one activity.")
+            return
+
+        self.root.destroy()
+        TravellerOutput().display_result(self)
+
+    def get_country(self):
+        for low, high, country in self.Countries_dictionary:
+            if low <= self.total_score <= high:
+                return country
+        return "No matching country"
+
+    def create_activity_scores_figure(self):
+        activities = [activity for activity, score in self.selected_activities]
+        scores = [score for activity, score in self.selected_activities]
+
+        fig, ax = plt.subplots(figsize=(6, 4))
+        ax.bar(activities, scores)
+        ax.set_title("Scores from Selected Activities")
+        ax.set_xlabel("Selected Activities")
+        ax.set_ylabel("Score")
+        ax.set_ylim(0, max(scores) + 3)
+        plt.setp(ax.get_xticklabels(), rotation=30, ha="right")
+        fig.tight_layout()
+
+        return fig
+
+    def create_country_ranges_figure(self):
+        countries = [country for low, high, country in self.Countries_dictionary]
+        max_scores = [high for low, high, country in self.Countries_dictionary]
+
+        fig, ax = plt.subplots(figsize=(6, 4))
+        ax.bar(countries, max_scores)
+        ax.axhline(self.total_score, linestyle="--", label=f"Your Score = {self.total_score}")
+        ax.set_title("Country Recommendation Score Ranges")
+        ax.set_xlabel("Country")
+        ax.set_ylabel("Score Range Upper Limit")
+        ax.legend()
+        plt.setp(ax.get_xticklabels(), rotation=30, ha="right")
+        fig.tight_layout()
+
+        return fig
+
