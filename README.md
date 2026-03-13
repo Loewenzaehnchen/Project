@@ -36,8 +36,6 @@ The program collects user input (age, interests, preferred activities), calculat
 - `submit_selection()` — score calculation
 - `get_country()` — determines recommended country
 
----
-
 ### :two: TravellerOutput
 
 - This class displays the final recommendation
@@ -60,7 +58,6 @@ The program collects user input (age, interests, preferred activities), calculat
   - Embeds graphs using Matplotlib
   - Calls `ActivityRecommender` for suggestions
   - Applies background image
----
 
 ### :three: ActivityRecommender
 
