@@ -85,10 +85,10 @@ The program collects user input (age, interests, preferred activities), calculat
 
 <!-- OUTPUT PICTURE HERE -->
 
-![First page](images/output.png)
-![Second page](images/output.png)
-![Third page](images/output.png)
-![Final page](images/output.png)
+![First page](First.png)
+![Second page](Second.png)
+![Third page](Third.png)
+![Final page](Final.png)
 
 ---
 
